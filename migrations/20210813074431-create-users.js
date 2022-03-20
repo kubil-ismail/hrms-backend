@@ -14,8 +14,17 @@ module.exports = {
       password: {
         type: Sequelize.STRING,
       },
+      status: {
+        type: Sequelize.INTEGER(1),
+        defaultValue: 1,
+      },
+      role: {
+        type: Sequelize.INTEGER(1),
+        defaultValue: 1,
+      },
       is_login: {
         type: Sequelize.BOOLEAN,
+        defaultValue: 0,
       },
       createdAt: {
         allowNull: false,

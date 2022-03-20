@@ -3,6 +3,8 @@ const model = require("../../models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const bcryptSalt = bcrypt.genSaltSync(10);
+const fs = require("fs");
+const nodemailer = require("../../utils/nodemailer");
 
 module.exports = {
   // post auth/login
@@ -18,6 +20,11 @@ module.exports = {
 
         if (result && result.dataValues.is_login) {
           throw new Error("User already login");
+        }
+
+        // check if user has activate
+        if (result && result.dataValues.status !== 3) {
+          throw new Error("User must activate first");
         }
 
         return result;
@@ -56,7 +63,6 @@ module.exports = {
         })
       );
   },
-
   // post auth/register
   register: (req, res) => {
     const requestBody = req.body;
@@ -65,8 +71,26 @@ module.exports = {
       .findOne({
         where: { email: requestBody.email },
       })
-      .then((result) => {
+      .then(async (result) => {
         if (result) throw new Error("User already registered");
+
+        const template = fs.readFileSync("./helpers/activateTemplates.html", {
+          encoding: "utf-8",
+        });
+
+        const token = jwt.sign(requestBody, process.env.APP_SECRET_KEY, {
+          expiresIn: "1h",
+        });
+
+        const verify_url = `${process.env.APP_URL}/v1/activate?token=${token}`;
+        const send = await nodemailer({
+          template,
+          email: requestBody.email,
+          link: verify_url,
+          subject: "Activate account",
+        });
+
+        if (!send) throw new Error("Send activation failed");
 
         const hashPassword = bcrypt.hashSync(requestBody.password, bcryptSalt);
 
@@ -74,7 +98,6 @@ module.exports = {
           ...requestBody,
           ...{
             password: hashPassword,
-            is_login: 0,
           },
         });
       })
@@ -95,8 +118,7 @@ module.exports = {
         })
       );
   },
-
-  // get auth/logout
+  // post auth/logout
   logout: (req, res) => {
     const { id } = req.params;
 
@@ -118,5 +140,146 @@ module.exports = {
           data: null,
         })
       );
+  },
+  // patch auth/activate
+  activate: (req, res) => {
+    const { token } = req.query;
+
+    const redirect_url = process.env.APP_REDIRECT;
+    const decode = jwt.verify(token, process.env.APP_SECRET_KEY);
+
+    jwt.verify(token, process.env.APP_SECRET_KEY, async (err) => {
+      if (err) {
+        res.redirect(redirect_url + "/activate/failed");
+      } else {
+        const users = await model.users.findOne({
+          where: { email: decode.email },
+        });
+
+        if (!users) {
+          res.redirect(redirect_url + "/activate/failed");
+        }
+
+        await model.users.update(
+          { status: 2 },
+          { where: { email: decode.email } }
+        );
+
+        res.redirect(redirect_url + "/activate/success");
+      }
+    });
+  },
+  // post auth/forgot
+  forgot: async (req, res) => {
+    try {
+      const { email } = req.body;
+
+      const user = await model.users.findOne({
+        where: { email: email },
+      });
+
+      if (!user) {
+        throw new Error("User not exist");
+      }
+
+      const template = fs.readFileSync("./helpers/forgotTemplates.html", {
+        encoding: "utf-8",
+      });
+
+      const token = jwt.sign(req.body, process.env.APP_SECRET_KEY, {
+        expiresIn: "1h",
+      });
+
+      const verify_url = `${process.env.APP_URL}/v1/forgot/verify?token=${token}`;
+
+      await nodemailer({
+        template,
+        email: email,
+        link: verify_url,
+        name: user.dataValues.fullname,
+        subject: "Reset your password",
+      });
+
+      res.status(200).json({
+        status: "OK",
+        messages: "send success",
+        data: null,
+      });
+    } catch (error) {
+      res.status(400).json({
+        status: "ERROR",
+        messages: error.message,
+        data: null,
+      });
+    }
+  },
+  forgotVerify: async (req, res) => {
+    try {
+      const { token } = req.query;
+
+      const redirect_url = process.env.APP_REDIRECT;
+      const decode = jwt.verify(token, process.env.APP_SECRET_KEY);
+
+      jwt.verify(token, process.env.APP_SECRET_KEY, async function (err) {
+        if (err) {
+          res.redirect(redirect_url + "/activate/failed");
+        } else {
+          const users = await model.users.findOne({
+            where: { email: decode.email },
+          });
+
+          if (!users) {
+            res.redirect(redirect_url + "/activate/failed");
+          } else {
+            res.redirect(redirect_url + `/reset-password/${token}`);
+          }
+        }
+      });
+    } catch (error) {
+      res.status(400).json({
+        status: "ERROR",
+        messages: error.message,
+        data: null,
+      });
+    }
+  },
+  resetPassword: async (req, res) => {
+    try {
+      const { token, password } = req.body;
+
+      const decode = jwt.verify(token, process.env.APP_SECRET_KEY);
+      const hashPassword = bcrypt.hashSync(password, bcryptSalt);
+
+      jwt.verify(token, process.env.APP_SECRET_KEY, async (err) => {
+        if (err) {
+          throw new Error("Token expired");
+        } else {
+          const users = await model.users.findOne({
+            where: { email: decode.email },
+          });
+
+          if (!users) {
+            throw new Error("User not found");
+          } else {
+            await model.users.update(
+              { password: hashPassword },
+              { where: { id: users.dataValues.id } }
+            );
+
+            res.status(200).json({
+              status: "OK",
+              messages: "Reset password success",
+              data: null,
+            });
+          }
+        }
+      });
+    } catch (error) {
+      res.status(400).json({
+        status: "ERROR",
+        messages: error.message,
+        data: null,
+      });
+    }
   },
 };

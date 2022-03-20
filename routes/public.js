@@ -10,7 +10,24 @@ module.exports = [
   {
     path: `${version}/auth/register`,
     controllers: require("../controllers/Auth").register,
+    validator: require("../controllers/Auth/validator").registValidator,
     method: "post",
+  },
+  {
+    path: `${version}/auth/forgot`,
+    controllers: require("../controllers/Auth").forgot,
+    validator: require("../controllers/Auth/validator").forgetValidator,
+    method: "post",
+  },
+  {
+    path: `${version}/forgot/verify`,
+    controllers: require("../controllers/Auth").forgotVerify,
+    method: "get",
+  },
+  {
+    path: `${version}/activate`,
+    controllers: require("../controllers/Auth").activate,
+    method: "get",
   },
   {
     path: `${version}/auth/logout/:id`,

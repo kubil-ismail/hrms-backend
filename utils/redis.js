@@ -1,6 +1,10 @@
 require("dotenv").config();
 
 const Redis = require("ioredis");
-const redis = new Redis();
+let redis;
+
+if (process.env.APP_REDIS) {
+  redis = new Redis();
+}
 
 module.exports = redis;

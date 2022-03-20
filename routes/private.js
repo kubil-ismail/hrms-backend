@@ -7,4 +7,9 @@ module.exports = [
     method: "get",
     cache: true,
   },
+  {
+    path: `${version}/auth/reset-password`,
+    controllers: require("../controllers/Auth").resetPassword,
+    method: "post",
+  },
 ];
