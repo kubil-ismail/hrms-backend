@@ -10,4 +10,8 @@ module.exports = {
   forgetValidator: {
     email: "required|email",
   },
+  resetPasswordValidator: {
+    token: "required",
+    password: "required|minLength:8",
+  },
 };

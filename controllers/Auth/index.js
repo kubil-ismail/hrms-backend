@@ -23,7 +23,7 @@ module.exports = {
         }
 
         // check if user has activate
-        if (result && result.dataValues.status !== 3) {
+        if (result && result.dataValues.status !== 2) {
           throw new Error("User must activate first");
         }
 
@@ -41,9 +41,13 @@ module.exports = {
           .then((status) => {
             if (!status[0]) throw new Error("Something wrong");
 
-            const token = jwt.sign(req.body, process.env.APP_SECRET_KEY, {
-              expiresIn: "24h",
-            });
+            const token = jwt.sign(
+              { email: email, password: result.dataValues.password },
+              process.env.APP_SECRET_KEY,
+              {
+                expiresIn: "24h",
+              }
+            );
 
             res.json({
               status: "OK",
