@@ -104,4 +104,29 @@ module.exports = [
     controllers: require("../controllers/Skills").deleteSkill,
     method: "delete",
   },
+
+  //profile
+    {
+      path: `${version}/profile/:userId`,
+      controllers: require("../controllers/Profile").getProfile,
+      method: "get",
+      cache: true,
+    },
+    {
+      path: `${version}/profile/:userId`,
+      controllers: require("../controllers/Profile").addProfile,
+      validator: require("../controllers/Profile/validator").addProfile,
+      method: "post",
+    },
+    {
+      path: `${version}/profile/:userId`,
+      controllers: require("../controllers/Profile").editProfile,
+      validator: require("../controllers/Profile/validator").addProfile,
+      method: "patch",
+    },
+    {
+      path: `${version}/profile/::userId`,
+      controllers: require("../controllers/Profile").deleteProfile,
+      method: "delete",
+    },
 ];
