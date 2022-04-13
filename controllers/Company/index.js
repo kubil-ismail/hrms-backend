@@ -120,12 +120,16 @@ module.exports = {
         where: { id },
       });
 
-      setRedis(req.originalUrl, JSON.stringify(result));
+      const companyJobs = await model.job.findAll({
+        where: { company_id: id },
+      });
+
+      setRedis(req.originalUrl, JSON.stringify({ result, jobs: companyJobs }));
 
       res.json({
         status: "OK",
         messages: "",
-        data: result,
+        data: { result, jobs: companyJobs },
       });
     } catch (error) {
       res.status(400).json({

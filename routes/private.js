@@ -79,4 +79,5 @@ module.exports = [
     method: "get",
     cache: true,
   },
+  
 ];
