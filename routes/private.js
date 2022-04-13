@@ -83,6 +83,10 @@ module.exports = [
   {
     path: `${version}/skills/:userId`,
     controllers: require("../controllers/Skills").getSkills,
+  // Experince
+  {
+    path: `${version}/skills/:userId`,
+    controllers: require("../controllers/Skills").getSkills,
     method: "get",
     cache: true,
   },
@@ -90,6 +94,47 @@ module.exports = [
     path: `${version}/skill`,
     controllers: require("../controllers/Skills").addSkill,
     validator: require("../controllers/Skills/validator").addSkill,
+    method: "post",
+  },
+  {
+    path: `${version}/skill/:id`,
+    controllers: require("../controllers/Skills").editSkill,
+    validator: require("../controllers/Skills/validator").editSkill,
+    method: "patch",
+  },
+  {
+    path: `${version}/skill/:id`,
+    controllers: require("../controllers/Skills").deleteSkill,
+    method: "delete",
+  },
+
+  //profile
+    {
+      path: `${version}/profile/:userId`,
+      controllers: require("../controllers/Profile").getProfile,
+      method: "get",
+      cache: true,
+    },
+    {
+      path: `${version}/profile/:userId`,
+      controllers: require("../controllers/Profile").addProfile,
+      validator: require("../controllers/Profile/validator").addProfile,
+      method: "post",
+    },
+    {
+      path: `${version}/profile/:userId`,
+      controllers: require("../controllers/Profile").editProfile,
+      validator: require("../controllers/Profile/validator").addProfile,
+      method: "patch",
+    },
+    {
+      path: `${version}/profile/::userId`,
+      controllers: require("../controllers/Profile").deleteProfile,
+      method: "delete",
+    },
+    path: `${version}/experience`,
+    controllers: require("../controllers/Experience").addExprience,
+    validator: require("../controllers/Experience/validator").addExprience,
     method: "post",
   },
   {
