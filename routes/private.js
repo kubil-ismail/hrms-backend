@@ -79,4 +79,28 @@ module.exports = [
     method: "get",
     cache: true,
   },
+    // Education
+    {
+      path: `${version}/educations/:userId`,
+      controllers: require("../controllers/Education").getEducation,
+      method: "get",
+      cache: true,
+    },
+    {
+      path: `${version}/education`,
+      controllers: require("../controllers/Education").addEducation,
+      validator: require("../controllers/Education/validator").addEducation,
+      method: "post",
+    },
+    {
+      path: `${version}/education/:id`,
+      controllers: require("../controllers/Education").editEducation,
+      validator: require("../controllers/Education/validator").editEducation,
+      method: "patch",
+    },
+    {
+      path: `${version}/education/:id`,
+      controllers: require("../controllers/Education").deleteEducation,
+      method: "delete",
+    },
 ];
