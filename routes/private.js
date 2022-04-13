@@ -79,11 +79,11 @@ module.exports = [
     method: "get",
     cache: true,
   },
-    // Education
-    {
-      path: `${version}/educations/:userId`,
-      controllers: require("../controllers/Education").getEducation,
-    },
+  // Education
+  {
+    path: `${version}/educations/:userId`,
+    controllers: require("../controllers/Education").getEducation,
+  },
   // sosmed
   {
     path: `${version}/social-media/:userId`,
@@ -134,45 +134,47 @@ module.exports = [
   },
 
   //profile
-    {
-      path: `${version}/profile/:userId`,
-      controllers: require("../controllers/Profile").getProfile,
-      method: "get",
-      cache: true,
-    },
-    {
-      path: `${version}/education`,
-      controllers: require("../controllers/Education").addEducation,
-      validator: require("../controllers/Education/validator").addEducation,
-      method: "post",
-    },
-    {
-      path: `${version}/education/:id`,
-      controllers: require("../controllers/Education").editEducation,
-      validator: require("../controllers/Education/validator").editEducation,
-      method: "patch",
-    },
-    {
-      path: `${version}/education/:id`,
-      controllers: require("../controllers/Education").deleteEducation,
-      method: "delete",
-    },
-      path: `${version}/profile/:userId`,
-      controllers: require("../controllers/Profile").addProfile,
-      validator: require("../controllers/Profile/validator").addProfile,
-      method: "post",
-    },
-    {
-      path: `${version}/profile/:userId`,
-      controllers: require("../controllers/Profile").editProfile,
-      validator: require("../controllers/Profile/validator").addProfile,
-      method: "patch",
-    },
-    {
-      path: `${version}/profile/::userId`,
-      controllers: require("../controllers/Profile").deleteProfile,
-      method: "delete",
-    },
+  {
+    path: `${version}/profile/:userId`,
+    controllers: require("../controllers/Profile").getProfile,
+    method: "get",
+    cache: true,
+  },
+  {
+    path: `${version}/education`,
+    controllers: require("../controllers/Education").addEducation,
+    validator: require("../controllers/Education/validator").addEducation,
+    method: "post",
+  },
+  {
+    path: `${version}/education/:id`,
+    controllers: require("../controllers/Education").editEducation,
+    validator: require("../controllers/Education/validator").editEducation,
+    method: "patch",
+  },
+  {
+    path: `${version}/education/:id`,
+    controllers: require("../controllers/Education").deleteEducation,
+    method: "delete",
+  },
+  {
+    path: `${version}/profile/:userId`,
+    controllers: require("../controllers/Profile").addProfile,
+    validator: require("../controllers/Profile/validator").addProfile,
+    method: "post",
+  },
+  {
+    path: `${version}/profile/:userId`,
+    controllers: require("../controllers/Profile").editProfile,
+    validator: require("../controllers/Profile/validator").addProfile,
+    method: "patch",
+  },
+  {
+    path: `${version}/profile/::userId`,
+    controllers: require("../controllers/Profile").deleteProfile,
+    method: "delete",
+  },
+  {
     path: `${version}/experience`,
     controllers: require("../controllers/Experience").addExprience,
     validator: require("../controllers/Experience/validator").addExprience,
