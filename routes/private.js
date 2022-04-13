@@ -79,4 +79,29 @@ module.exports = [
     method: "get",
     cache: true,
   },
+
+  // skills
+  {
+    path: `${version}/skills/:userId`,
+    controllers: require("../controllers/Skills").getSkills,
+    method: "get",
+    cache: true,
+  },
+  {
+    path: `${version}/skill`,
+    controllers: require("../controllers/Skills").addSkill,
+    validator: require("../controllers/Skills/validator").addSkill,
+    method: "post",
+  },
+  {
+    path: `${version}/skill/:id`,
+    controllers: require("../controllers/Skills").editSkill,
+    validator: require("../controllers/Skills/validator").editSkill,
+    method: "patch",
+  },
+  {
+    path: `${version}/skill/:id`,
+    controllers: require("../controllers/Skills").deleteSkill,
+    method: "delete",
+  },
 ];
