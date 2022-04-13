@@ -79,4 +79,28 @@ module.exports = [
     method: "get",
     cache: true,
   },
+  // sosmed
+  {
+    path: `${version}/social-media/:userId`,
+    controllers: require("../controllers/SocialMedia").getSosmed,
+    method: "get",
+    cache: true,
+  },
+  {
+    path: `${version}/social-media`,
+    controllers: require("../controllers/SocialMedia").addSosmed,
+    validator: require("../controllers/SocialMedia/validator").addSosMed,
+    method: "post",
+  },
+  {
+    path: `${version}/social-media/:id`,
+    controllers: require("../controllers/SocialMedia").editSosmed,
+    validator: require("../controllers/SocialMedia/validator").editSosmed,
+    method: "patch",
+  },
+  {
+    path: `${version}/social-media/:id`,
+    controllers: require("../controllers/SocialMedia").deleteSosmed,
+    method: "delete",
+  },
 ];
