@@ -85,8 +85,8 @@ module.exports = [
     controllers: require("../controllers/Skills").getSkills,
   // Experince
   {
-    path: `${version}/experiences/:userId`,
-    controllers: require("../controllers/Experience").getExprience,
+    path: `${version}/skills/:userId`,
+    controllers: require("../controllers/Skills").getSkills,
     method: "get",
     cache: true,
   },
@@ -138,14 +138,14 @@ module.exports = [
     method: "post",
   },
   {
-    path: `${version}/experience/:id`,
-    controllers: require("../controllers/Experience").editExprience,
-    validator: require("../controllers/Experience/validator").editExprience,
+    path: `${version}/skill/:id`,
+    controllers: require("../controllers/Skills").editSkill,
+    validator: require("../controllers/Skills/validator").editSkill,
     method: "patch",
   },
   {
-    path: `${version}/experience/:id`,
-    controllers: require("../controllers/Experience").deleteExprience,
+    path: `${version}/skill/:id`,
+    controllers: require("../controllers/Skills").deleteSkill,
     method: "delete",
   },
 ];
