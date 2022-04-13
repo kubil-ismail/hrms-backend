@@ -79,7 +79,6 @@ module.exports = [
     method: "get",
     cache: true,
   },
-
   // skills
   {
     path: `${version}/skills/:userId`,
