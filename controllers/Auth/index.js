@@ -16,16 +16,16 @@ module.exports = {
         where: { email: email },
       })
       .then((result) => {
-        if (!result) throw new Error("User not existt");
+        if (!result) throw new Error("User not exist");
 
         if (result && result.dataValues.is_login) {
           throw new Error("User already login");
         }
 
         // check if user has activate
-        if (result && result.dataValues.status !== 2) {
-          throw new Error("User must activate first");
-        }
+        // if (result && result.dataValues.status !== 2) {
+        //   throw new Error("User must activate first");
+        // }
 
         return result;
       })
@@ -60,7 +60,7 @@ module.exports = {
           });
       })
       .catch((error) =>
-        res.status(401).json({
+        res.status(400).json({
           status: "ERROR",
           messages: error.message,
           data: null,
@@ -78,23 +78,23 @@ module.exports = {
       .then(async (result) => {
         if (result) throw new Error("User already registered");
 
-        const template = fs.readFileSync("./helpers/activateTemplates.html", {
-          encoding: "utf-8",
-        });
+        // const template = fs.readFileSync("./helpers/activateTemplates.html", {
+        //   encoding: "utf-8",
+        // });
 
-        const token = jwt.sign(requestBody, process.env.APP_SECRET_KEY, {
-          expiresIn: "1h",
-        });
+        // const token = jwt.sign(requestBody, process.env.APP_SECRET_KEY, {
+        //   expiresIn: "1h",
+        // });
 
-        const verify_url = `${process.env.APP_URL}/v1/activate?token=${token}`;
-        const send = await nodemailer({
-          template,
-          email: requestBody.email,
-          link: verify_url,
-          subject: "Activate account",
-        });
+        // const verify_url = `${process.env.APP_URL}/v1/activate?token=${token}`;
+        // const send = await nodemailer({
+        //   template,
+        //   email: requestBody.email,
+        //   link: verify_url,
+        //   subject: "Activate account",
+        // });
 
-        if (!send) throw new Error("Send activation failed");
+        // if (!send) throw new Error("Send activation failed");
 
         const hashPassword = bcrypt.hashSync(requestBody.password, bcryptSalt);
 

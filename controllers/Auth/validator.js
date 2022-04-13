@@ -6,6 +6,7 @@ module.exports = {
   registValidator: {
     email: "required|email",
     password: "required|minLength:8",
+    fullname: "required",
   },
   forgetValidator: {
     email: "required|email",
