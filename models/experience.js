@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   experience.init({
     user_id: DataTypes.INTEGER,
     title: DataTypes.STRING,
+    company: DataTypes.STRING,
     description: DataTypes.STRING,
     start_date: DataTypes.DATE,
     end_date: DataTypes.DATE
