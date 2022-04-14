@@ -79,6 +79,11 @@ module.exports = [
     method: "get",
     cache: true,
   },
+  {
+    path: `${version}/application`,
+    controllers: require("../controllers/Application").addApplication,
+    method: "post",
+  },
   // Education
   {
     path: `${version}/educations/:userId`,

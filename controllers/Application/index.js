@@ -6,20 +6,40 @@ module.exports = {
     try {
       const { limit, offset } = req.query;
 
-      model.company.belongsTo(model.job, {
+      model.application.belongsTo(model.company, {
         foreignKey: {
-          name: "id",
+          name: "company_id",
           allowNull: false,
         },
       });
 
-      const result = await model.company.findAndCountAll({
+      model.application.belongsTo(model.job, {
+        foreignKey: {
+          name: "job_id",
+          allowNull: false,
+        },
+      });
+
+      model.application.belongsTo(model.users, {
+        foreignKey: {
+          name: "user_id",
+          allowNull: false,
+        },
+      });
+
+      const result = await model.application.findAndCountAll({
         limit: parseInt(limit) || null,
         offset: parseInt(offset) || null,
         order: [["id", "DESC"]],
         include: [
           {
+            model: model.company,
+          },
+          {
             model: model.job,
+          },
+          {
+            model: model.users,
           },
         ],
       });
@@ -45,7 +65,7 @@ module.exports = {
   addApplication: async (req, res) => {
     try {
       const requestBody = req.body;
-      const create = await model.company.create(requestBody);
+      const create = await model.application.create(requestBody);
 
       if (!create) {
         throw new Error("Failed insert data");
