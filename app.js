@@ -64,6 +64,7 @@ app.use(function (req, res, next) {
   res.json({
     status: true,
     messages: "Api running well",
+    test: process.env.DB_HOST,
   });
 });
 
